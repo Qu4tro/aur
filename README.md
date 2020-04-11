@@ -9,3 +9,6 @@ This repo holds the PKGBUILD files from https://aur.archlinux.org/packages/?K=qu
 * Somewhere else `git clone ssh+git://aur@aur.archlinux.org/<PACKAGENAME>.git`, add content, push
 * Here `git submodule add ssh+git://aur@aur.archlinux.org/<PACKAGENAME>.git`
 * Make sure that `ssh+git://` address is used, not `git://`, nor `ssh://`, nor `git+ssh://`
+
+## Credits
+Workflow introduced [here](https://gergely.imreh.net/blog/2018/04/circleci-aur/).
