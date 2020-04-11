@@ -1,3 +1,9 @@
 [submodule "laby-git"]
 	path = laby-git
 	url = ssh+git://aur@aur.archlinux.org/laby-git.git
+[submodule "pass-file-git"]
+	path = pass-file-git
+	url = ssh+git://aur@aur.archlinux.org/pass-file-git.git
+[submodule "pass-type-git"]
+	path = pass-type-git
+	url = ssh+git://aur@aur.archlinux.org/pass-type-git.git

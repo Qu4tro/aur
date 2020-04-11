@@ -29,11 +29,37 @@ buildtest: &buildtest
 joblist: &joblist
   jobs:
     - laby-git
+    - pass-file-git
+    - pass-type-git
 
 # Main
 version: 2
 jobs:
   laby-git:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *updatepackage
+      - checkout
+      - run:
+          <<: *gitupdate
+      - run:
+          <<: *pkgbuildtest
+      - run:
+          <<: *buildtest
+  pass-file-git:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *updatepackage
+      - checkout
+      - run:
+          <<: *gitupdate
+      - run:
+          <<: *pkgbuildtest
+      - run:
+          <<: *buildtest
+  pass-type-git:
     <<: *defaults
     steps:
       - run:
