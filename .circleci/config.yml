@@ -28,26 +28,12 @@ buildtest: &buildtest
 
 joblist: &joblist
   jobs:
-    - balena-cli
-    - balena-engine
-    - casefile
-    - eszig
-    - gnushogi
-    - go-filecoin
-    - go-filecoin-git
-    - json-table
-    - juce
-    - particle-cli
-    - syncit
-    - versionist
-    - xshogi:
-        requires:
-          - gnushogi
+    - laby-git
 
 # Main
 version: 2
 jobs:
-  balena-cli:
+  laby-git:
     <<: *defaults
     steps:
       - run:
@@ -57,158 +43,6 @@ jobs:
           <<: *gitupdate
       - run:
           <<: *pkgbuildtest
-      - run:
-          <<: *buildtest
-  balena-engine:
-    <<: *defaults
-    steps:
-      - run:
-          <<: *updatepackage
-      - checkout
-      - run:
-          <<: *gitupdate
-      - run:
-          <<: *pkgbuildtest
-      - run:
-          <<: *buildtest
-  casefile:
-    <<: *defaults
-    steps:
-      - run:
-          <<: *updatepackage
-      - checkout
-      - run:
-          <<: *gitupdate
-      - run:
-          <<: *pkgbuildtest
-      - run:
-          <<: *buildtest
-  eszig:
-    <<: *defaults
-    steps:
-      - run:
-          <<: *updatepackage
-      - checkout
-      - run:
-          <<: *gitupdate
-      - run:
-          <<: *pkgbuildtest
-      - run:
-          <<: *buildtest
-  gnushogi:
-    <<: *defaults
-    steps:
-      - run:
-          <<: *updatepackage
-      - checkout
-      - run:
-          <<: *gitupdate
-      - run:
-          <<: *pkgbuildtest
-      - run:
-          <<: *buildtest
-      - persist_to_workspace:
-          root: gnushogi
-          paths: gnushogi-*.pkg.tar.xz
-  go-filecoin:
-    <<: *defaults
-    steps:
-      - run:
-          <<: *updatepackage
-      - checkout
-      - run:
-          <<: *gitupdate
-      - run:
-          <<: *pkgbuildtest
-      - run:
-          <<: *buildtest
-  go-filecoin-git:
-    <<: *defaults
-    steps:
-      - run:
-          <<: *updatepackage
-      - checkout
-      - run:
-          <<: *gitupdate
-      - run:
-          <<: *pkgbuildtest
-      - run:
-          <<: *buildtest
-  json-table:
-    <<: *defaults
-    steps:
-      - run:
-          <<: *updatepackage
-      - checkout
-      - run:
-          <<: *gitupdate
-      - run:
-          <<: *pkgbuildtest
-      - run:
-          <<: *buildtest
-  juce:
-    <<: *defaults
-    steps:
-      - run:
-          <<: *updatepackage
-      - checkout
-      - run:
-          <<: *gitupdate
-      - run:
-          <<: *pkgbuildtest
-      - run:
-          <<: *buildtest
-  particle-cli:
-    <<: *defaults
-    steps:
-      - run:
-          <<: *updatepackage
-      - checkout
-      - run:
-          <<: *gitupdate
-      - run:
-          <<: *pkgbuildtest
-      - run:
-          <<: *buildtest
-  syncit:
-    <<: *defaults
-    steps:
-      - run:
-          <<: *updatepackage
-      - checkout
-      - run:
-          <<: *gitupdate
-      - run:
-          <<: *pkgbuildtest
-      - run:
-          <<: *buildtest
-  versionist:
-    <<: *defaults
-    steps:
-      - run:
-          <<: *updatepackage
-      - checkout
-      - run:
-          <<: *gitupdate
-      - run:
-          <<: *pkgbuildtest
-      - run:
-          <<: *buildtest
-  xshogi:
-    <<: *defaults
-    steps:
-      - run:
-          <<: *updatepackage
-      - checkout
-      - run:
-          <<: *gitupdate
-      - run:
-          <<: *pkgbuildtest
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Installing gnushogi
-          command: sudo pacman -U --noconfirm /tmp/workspace/gnushogi*.pkg.*
       - run:
           <<: *buildtest
 
@@ -219,7 +53,8 @@ workflows:
   weekly:
     triggers:
       - schedule:
-          cron: "0 4 * * 6"
+          # “At 06:00 on Saturday.”
+          cron: "0 6 * * 6"
           filters:
             branches:
               only:

@@ -1,0 +1,3 @@
+[submodule "laby-git"]
+	path = laby-git
+	url = ssh+git://aur@aur.archlinux.org/laby-git.git
