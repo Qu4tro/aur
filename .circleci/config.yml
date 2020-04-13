@@ -31,6 +31,7 @@ joblist: &joblist
     - laby-git
     - pass-file-git
     - pass-type-git
+    - nato-spell-git
 
 # Main
 version: 2
@@ -60,6 +61,18 @@ jobs:
       - run:
           <<: *buildtest
   pass-type-git:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *updatepackage
+      - checkout
+      - run:
+          <<: *gitupdate
+      - run:
+          <<: *pkgbuildtest
+      - run:
+          <<: *buildtest
+  nato-spell-git:
     <<: *defaults
     steps:
       - run:
