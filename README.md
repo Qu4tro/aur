@@ -12,7 +12,7 @@ This repo holds the PKGBUILD files from https://aur.archlinux.org/packages/?K=qu
 - Here `git submodule add ssh+git://aur@aur.archlinux.org/<PACKAGENAME>.git`. 
   - Make sure that `ssh+git://` address is used, not `git://`, nor `ssh://`, nor `git+ssh://`
   - Ignore the warning and the fatal error
-- Add content, push.
+- Add content and `git add . && git commit && git push`.
 - Repeat command `git submodule add ssh+git://aur@aur.archlinux.org/<PACKAGENAME>.git`.
 - git push --set-upstream origin $(git_current_branch) (AKA `ggpush`) and create PR.
 
