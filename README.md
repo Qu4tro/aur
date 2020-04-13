@@ -4,11 +4,21 @@
 
 This repo holds the PKGBUILD files from https://aur.archlinux.org/packages/?K=quatro&SeB=m
 
-## Adding a new package (reminder)
+## Playbook
 
-* Somewhere else `git clone ssh+git://aur@aur.archlinux.org/<PACKAGENAME>.git`, add content, push
-* Here `git submodule add ssh+git://aur@aur.archlinux.org/<PACKAGENAME>.git`
-* Make sure that `ssh+git://` address is used, not `git://`, nor `ssh://`, nor `git+ssh://`
+### Adding a new package
+
+- Create a branch
+- Here `git submodule add ssh+git://aur@aur.archlinux.org/<PACKAGENAME>.git`. 
+  - Make sure that `ssh+git://` address is used, not `git://`, nor `ssh://`, nor `git+ssh://`
+  - Ignore the warning and the fatal error
+- Add content and `git add . && git commit && git push`.
+- Repeat command `git submodule add ssh+git://aur@aur.archlinux.org/<PACKAGENAME>.git`.
+- git push --set-upstream origin $(git_current_branch) (AKA `ggpush`) and create PR.
+
+> ### Updating (TODO)
+
+> * Somewhere else `git clone ssh+git://aur@aur.archlinux.org/<PACKAGENAME>.git`, add content, push
 
 ## Credits
 Workflow introduced [here](https://gergely.imreh.net/blog/2018/04/circleci-aur/).

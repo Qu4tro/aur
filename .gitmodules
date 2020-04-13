@@ -7,3 +7,6 @@
 [submodule "pass-type-git"]
 	path = pass-type-git
 	url = ssh+git://aur@aur.archlinux.org/pass-type-git.git
+[submodule "nato-spell-git"]
+	path = nato-spell-git
+	url = ssh+git://aur@aur.archlinux.org/nato-spell-git.git
