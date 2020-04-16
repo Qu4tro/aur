@@ -3,7 +3,7 @@ new: check
 	curl https://git.archlinux.org/pacman.git/plain/proto/PKGBUILD.proto > $(PKG)/PKGBUILD
 	cd $(PKG) && makepkg --printsrcinfo > .SRCINFO
 	cd $(PKG) && git add .SRCINFO PKGBUILD && git commit -m "Initial commit"
-	git submodule add ./$(PKG)
+	git submodule add ssh+git://aur@aur.archlinux.org/$(PKG).git $(PKG)
 
 
 check:

@@ -32,6 +32,7 @@ joblist: &joblist
     - pass-file-git
     - pass-type-git
     - nato-spell-git
+    - pass-spell-git
 
 # Main
 version: 2
@@ -80,6 +81,18 @@ jobs:
       - checkout
       - run:
           <<: *gitupdate
+      - run:
+          <<: *pkgbuildtest
+      - run:
+          <<: *buildtest
+  pass-spell-git:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *updatepackage
+      - checkout
+      # - run:
+      #     <<: *gitupdate
       - run:
           <<: *pkgbuildtest
       - run:
