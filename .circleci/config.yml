@@ -12,7 +12,7 @@ gitupdate: &gitupdate
   name: Git repo updates
   command: |
     sed -i "s#ssh+git://aur@aur.archlinux.org#https://aur.archlinux.org#" .gitmodules
-    git submodule update --init
+    git submodule update --init ${CIRCLE_JOB}
 
 pkgbuildtest: &pkgbuildtest
   name: Testing PKGBUILD
