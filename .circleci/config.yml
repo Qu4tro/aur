@@ -100,7 +100,7 @@ jobs:
           <<: *gitupdate
       - run:
           <<: *pkgbuildtest
-            - attach_workspace:
+      - attach_workspace:
           at: /tmp/workspace
       - run:
           name: Installing nato-spell
