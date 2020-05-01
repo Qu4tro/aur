@@ -28,6 +28,7 @@ buildtest: &buildtest
 
 joblist: &joblist
   jobs:
+    - tuql
     - laby-git
     - pass-file-git
     - pass-type-git
@@ -39,6 +40,18 @@ joblist: &joblist
 # Main
 version: 2
 jobs:
+  tuql:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *updatepackage
+      - checkout
+      - run:
+          <<: *gitupdate
+      - run:
+          <<: *pkgbuildtest
+      - run:
+          <<: *buildtest
   laby-git:
     <<: *defaults
     steps:
