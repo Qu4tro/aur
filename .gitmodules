@@ -10,3 +10,6 @@
 [submodule "nato-spell-git"]
 	path = nato-spell-git
 	url = ssh+git://aur@aur.archlinux.org/nato-spell-git.git
+[submodule "pass-spell-git"]
+	path = pass-spell-git
+	url = ssh+git://aur@aur.archlinux.org/pass-spell-git.git

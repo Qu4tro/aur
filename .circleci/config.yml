@@ -12,7 +12,7 @@ gitupdate: &gitupdate
   name: Git repo updates
   command: |
     sed -i "s#ssh+git://aur@aur.archlinux.org#https://aur.archlinux.org#" .gitmodules
-    git submodule update --init
+    git submodule update --init ${CIRCLE_JOB}
 
 pkgbuildtest: &pkgbuildtest
   name: Testing PKGBUILD
@@ -32,6 +32,9 @@ joblist: &joblist
     - pass-file-git
     - pass-type-git
     - nato-spell-git
+    - pass-spell-git:
+        requires:
+          - nato-spell-git
 
 # Main
 version: 2
@@ -82,6 +85,26 @@ jobs:
           <<: *gitupdate
       - run:
           <<: *pkgbuildtest
+      - run:
+          <<: *buildtest
+      - persist_to_workspace:
+          root: nato-spell-git
+          paths: nato-spell-git-*.pkg.tar.xz
+  pass-spell-git:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *updatepackage
+      - checkout
+      - run:
+          <<: *gitupdate
+      - run:
+          <<: *pkgbuildtest
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Installing nato-spell
+          command: sudo pacman -U --noconfirm /tmp/workspace/nato-spell-git*.pkg.*
       - run:
           <<: *buildtest
 
