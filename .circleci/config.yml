@@ -32,7 +32,9 @@ joblist: &joblist
     - pass-file-git
     - pass-type-git
     - nato-spell-git
-    - pass-spell-git
+    - pass-spell-git:
+        requires:
+          - nato-spell-git
 
 # Main
 version: 2
@@ -85,6 +87,9 @@ jobs:
           <<: *pkgbuildtest
       - run:
           <<: *buildtest
+      - persist_to_workspace:
+          root: nato-spell-git
+          paths: nato-spell-git-*.pkg.tar.xz
   pass-spell-git:
     <<: *defaults
     steps:
@@ -95,6 +100,11 @@ jobs:
           <<: *gitupdate
       - run:
           <<: *pkgbuildtest
+            - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Installing nato-spell
+          command: sudo pacman -U --noconfirm /tmp/workspace/nato-spell-git*.pkg.*
       - run:
           <<: *buildtest
 
