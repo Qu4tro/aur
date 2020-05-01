@@ -13,3 +13,6 @@
 [submodule "pass-spell-git"]
 	path = pass-spell-git
 	url = ssh+git://aur@aur.archlinux.org/pass-spell-git.git
+[submodule "tuql"]
+	path = tuql
+	url = ssh+git://aur@aur.archlinux.org/tuql.git
