@@ -11,7 +11,6 @@ updatepackage: &updatepackage
 uptodatetest: &uptodatetest
   name: Check if up-to-date with AUR
   command: |
-    git subtree pull --prefix=${CIRCLE_JOB} https://aur.archlinux.org/${CIRCLE_JOB}.git master --squash
     git subtree pull --prefix=${CIRCLE_JOB} https://aur.archlinux.org/${CIRCLE_JOB}.git master --squash 2>&1 | grep "Subtree is already at commit"
 
 # uptodatetest2: &uptodatetest2
