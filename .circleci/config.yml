@@ -18,7 +18,7 @@ pkgbuildtest: &pkgbuildtest
   name: Testing PKGBUILD
   command: |
     cd ~/aur/${CIRCLE_JOB}
-    namcap PKGBUILD
+    namcap -i PKGBUILD
 
 buildtest: &buildtest
   name: Building package
