@@ -57,6 +57,8 @@ jobs:
       - run:
           <<: *pulllatestcheck
       - run:
+          <<: *pushlatestcheck
+      - run:
           <<: *pkgbuildtest
       - run:
           <<: *buildtest
@@ -68,6 +70,8 @@ jobs:
       - checkout
       - run:
           <<: *pulllatestcheck
+      - run:
+          <<: *pushlatestcheck
       - run:
           <<: *pkgbuildtest
       - run:
@@ -81,6 +85,8 @@ jobs:
       - run:
           <<: *pulllatestcheck
       - run:
+          <<: *pushlatestcheck
+      - run:
           <<: *pkgbuildtest
       - run:
           <<: *buildtest
@@ -93,6 +99,8 @@ jobs:
       - run:
           <<: *pulllatestcheck
       - run:
+          <<: *pushlatestcheck
+      - run:
           <<: *pkgbuildtest
       - run:
           <<: *buildtest
@@ -104,6 +112,8 @@ jobs:
       - checkout
       - run:
           <<: *pulllatestcheck
+      - run:
+          <<: *pushlatestcheck
       - run:
           <<: *pkgbuildtest
       - run:
@@ -119,6 +129,8 @@ jobs:
       - checkout
       - run:
           <<: *pulllatestcheck
+      - run:
+          <<: *pushlatestcheck
       - run:
           <<: *pkgbuildtest
       - attach_workspace:
