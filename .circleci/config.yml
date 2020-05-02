@@ -8,12 +8,17 @@ updatepackage: &updatepackage
   name: Update packages
   command: sudo pacman -Syu --noconfirm
 
-# Redo this step to check for pull changes. Only run on weekly runs / master
-# gitupdate: &gitupdate
-#   name: Git repo updates
-#   command: |
-#     sed -i "s#ssh+git://aur@aur.archlinux.org#https://aur.archlinux.org#" .gitmodules
-#     git submodule update --init ${CIRCLE_JOB}
+uptodatetest: &gitupdate
+name: Check if up-to-date with AUR
+command: |
+  git subtree pull --prefix=${CIRCLE_JOB} ssh+git://aur@aur.archlinux.org/${CIRCLE_JOB}.git master --squash 2>&1 | grep "Subtree is already at commit"
+
+# uptodatetest2: &gitupdate
+# name: Check if up-to-date with AUR
+# command: |
+#   if [ "${CIRCLE_BRANCH}" == "master" ];
+#     git subtree pull --prefix=${CIRCLE_JOB} ssh+git://aur@aur.archlinux.org/${CIRCLE_JOB}.git master --squash 2>&1 | grep "Subtree is already at commit"
+#   fi
 
 pkgbuildtest: &pkgbuildtest
   name: Testing PKGBUILD
@@ -48,6 +53,8 @@ jobs:
           <<: *updatepackage
       - checkout
       - run:
+          <<: *uptodatetest
+      - run:
           <<: *pkgbuildtest
       - run:
           <<: *buildtest
@@ -57,6 +64,8 @@ jobs:
       - run:
           <<: *updatepackage
       - checkout
+      - run:
+          <<: *uptodatetest
       - run:
           <<: *pkgbuildtest
       - run:
@@ -68,6 +77,8 @@ jobs:
           <<: *updatepackage
       - checkout
       - run:
+          <<: *uptodatetest
+      - run:
           <<: *pkgbuildtest
       - run:
           <<: *buildtest
@@ -78,6 +89,8 @@ jobs:
           <<: *updatepackage
       - checkout
       - run:
+          <<: *uptodatetest
+      - run:
           <<: *pkgbuildtest
       - run:
           <<: *buildtest
@@ -87,6 +100,8 @@ jobs:
       - run:
           <<: *updatepackage
       - checkout
+      - run:
+          <<: *uptodatetest
       - run:
           <<: *pkgbuildtest
       - run:
@@ -100,6 +115,8 @@ jobs:
       - run:
           <<: *updatepackage
       - checkout
+      - run:
+          <<: *uptodatetest
       - run:
           <<: *pkgbuildtest
       - attach_workspace:
