@@ -19,14 +19,23 @@ pulllatestcheck: &pulllatestcheck
 pushlatestcheck: &pushlatestcheck
   name: Check if there are updates in this repository that are missing from AUR
   command: |
-    git clone "https://aur.archlinux.org/${CIRCLE_JOB}.git" "${CIRCLE_JOB}_2"
-    diff -r "${CIRCLE_JOB}" "${CIRCLE_JOB}_2"
+    if [ "${CIRCLE_BRANCH}" = "master" ]
+    then
+      git clone "https://aur.archlinux.org/${CIRCLE_JOB}.git" "${CIRCLE_JOB}_2"
+      diff -r "${CIRCLE_JOB}" "${CIRCLE_JOB}_2"
+    fi
 
 pkgbuildtest: &pkgbuildtest
   name: Testing PKGBUILD
   command: |
     cd ~/aur/${CIRCLE_JOB}
     namcap PKGBUILD && [[ ! "$(namcap PKGBUILD)" ]]
+
+srcinfotest: &srcinfotest
+  name: Check if srcinfo was correctly generated
+  command: |
+    makepkg --printsrcinfo >! .SRCINFO2
+    diff .SRCINFO .SRCINFO2
 
 buildtest: &buildtest
   name: Building package
@@ -61,6 +70,8 @@ jobs:
       - run:
           <<: *pkgbuildtest
       - run:
+          <<: *srcinfotest
+      - run:
           <<: *buildtest
   laby-git:
     <<: *defaults
@@ -74,6 +85,8 @@ jobs:
           <<: *pushlatestcheck
       - run:
           <<: *pkgbuildtest
+      - run:
+          <<: *srcinfotest
       - run:
           <<: *buildtest
   pass-file-git:
@@ -89,6 +102,8 @@ jobs:
       - run:
           <<: *pkgbuildtest
       - run:
+          <<: *srcinfotest
+      - run:
           <<: *buildtest
   pass-type-git:
     <<: *defaults
@@ -103,6 +118,8 @@ jobs:
       - run:
           <<: *pkgbuildtest
       - run:
+          <<: *srcinfotest
+      - run:
           <<: *buildtest
   nato-spell-git:
     <<: *defaults
@@ -116,6 +133,8 @@ jobs:
           <<: *pushlatestcheck
       - run:
           <<: *pkgbuildtest
+      - run:
+          <<: *srcinfotest
       - run:
           <<: *buildtest
       - persist_to_workspace:
@@ -133,6 +152,8 @@ jobs:
           <<: *pushlatestcheck
       - run:
           <<: *pkgbuildtest
+      - run:
+          <<: *srcinfotest
       - attach_workspace:
           at: /tmp/workspace
       - run:
