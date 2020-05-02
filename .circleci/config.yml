@@ -8,13 +8,19 @@ updatepackage: &updatepackage
   name: Update packages
   command: sudo pacman -Syu --noconfirm
 
-uptodatetest: &uptodatetest
-  name: Check if up-to-date with AUR
+pulllatestcheck: &pulllatestcheck
+  name: Check if there are no AUR updates that are missing from this repo
   command: |
     if [ "${CIRCLE_BRANCH}" = "master" ]
     then
       git subtree pull --prefix="${CIRCLE_JOB}" "https://aur.archlinux.org/${CIRCLE_JOB}.git" master --squash 2>&1 | grep "Subtree is already at commit"
     fi
+
+pushlatestcheck: &pushlatestcheck
+  name: Check if there are updates in this repository that are missing from AUR
+  command: |
+    git clone "https://aur.archlinux.org/${CIRCLE_JOB}.git" "${CIRCLE_JOB}_2"
+    diff -r "${CIRCLE_JOB}" "${CIRCLE_JOB}_2"
 
 pkgbuildtest: &pkgbuildtest
   name: Testing PKGBUILD
@@ -49,7 +55,7 @@ jobs:
           <<: *updatepackage
       - checkout
       - run:
-          <<: *uptodatetest
+          <<: *pulllatestcheck
       - run:
           <<: *pkgbuildtest
       - run:
@@ -61,7 +67,7 @@ jobs:
           <<: *updatepackage
       - checkout
       - run:
-          <<: *uptodatetest
+          <<: *pulllatestcheck
       - run:
           <<: *pkgbuildtest
       - run:
@@ -73,7 +79,7 @@ jobs:
           <<: *updatepackage
       - checkout
       - run:
-          <<: *uptodatetest
+          <<: *pulllatestcheck
       - run:
           <<: *pkgbuildtest
       - run:
@@ -85,7 +91,7 @@ jobs:
           <<: *updatepackage
       - checkout
       - run:
-          <<: *uptodatetest
+          <<: *pulllatestcheck
       - run:
           <<: *pkgbuildtest
       - run:
@@ -97,7 +103,7 @@ jobs:
           <<: *updatepackage
       - checkout
       - run:
-          <<: *uptodatetest
+          <<: *pulllatestcheck
       - run:
           <<: *pkgbuildtest
       - run:
@@ -112,7 +118,7 @@ jobs:
           <<: *updatepackage
       - checkout
       - run:
-          <<: *uptodatetest
+          <<: *pulllatestcheck
       - run:
           <<: *pkgbuildtest
       - attach_workspace:
