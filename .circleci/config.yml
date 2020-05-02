@@ -8,12 +8,12 @@ updatepackage: &updatepackage
   name: Update packages
   command: sudo pacman -Syu --noconfirm
 
-uptodatetest: &updatepackage
+uptodatetest: &uptodatetest
 name: Check if up-to-date with AUR
 command: |
   git subtree pull --prefix=${CIRCLE_JOB} ssh+git://aur@aur.archlinux.org/${CIRCLE_JOB}.git master --squash 2>&1 | grep "Subtree is already at commit"
 
-# uptodatetest2: &gitupdate
+# uptodatetest2: &uptodatetest2
 # name: Check if up-to-date with AUR
 # command: |
 #   if [ "${CIRCLE_BRANCH}" == "master" ];
