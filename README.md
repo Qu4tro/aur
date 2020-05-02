@@ -27,12 +27,12 @@ I'm not sure if there's a way around this.
 ### Adding a package (TODO)
 
 - [1] Create a branch
-- [2] Add a directory with PKGBUILD (*) and .SRCINFO of the package. Commit changes.
+- [2] Add a directory with PKGBUILD (¹) and .SRCINFO of the package. Commit changes.
 - [3] Push and create a new pull request.
 - [4] If CI gives you the okay, Run `?????` and push the new commits.
 - [5] Merge into master.
 
-* You can use `curl https://git.archlinux.org/pacman.git/plain/proto/PKGBUILD.proto > PKGBUILD` as a starting point.
+¹ You can use `curl https://git.archlinux.org/pacman.git/plain/proto/PKGBUILD.proto > PKGBUILD` as a starting point.
 
 ## Credits
 Workflow introduced [here](https://gergely.imreh.net/blog/2018/04/circleci-aur/).
