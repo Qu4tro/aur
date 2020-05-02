@@ -34,6 +34,7 @@ pkgbuildtest: &pkgbuildtest
 srcinfotest: &srcinfotest
   name: Check if srcinfo was correctly generated
   command: |
+    cd ~/aur/${CIRCLE_JOB}
     makepkg --printsrcinfo >! .SRCINFO2
     diff .SRCINFO .SRCINFO2
 
