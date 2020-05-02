@@ -13,6 +13,7 @@ pulllatestcheck: &pulllatestcheck
   command: |
     if [ "${CIRCLE_BRANCH}" = "master" ]
     then
+      git subtree pull --prefix="${CIRCLE_JOB}" "https://aur.archlinux.org/${CIRCLE_JOB}.git" master --squash
       git subtree pull --prefix="${CIRCLE_JOB}" "https://aur.archlinux.org/${CIRCLE_JOB}.git" master --squash 2>&1 | grep "Subtree is already at commit"
     fi
 
