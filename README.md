@@ -4,6 +4,19 @@
 
 This repo holds the PKGBUILD files from https://aur.archlinux.org/packages/?K=quatro&SeB=m
 
+## Concept / Goals / Setup
+
+I've just migrated this repo from submodules to subtrees. I think subtrees are a better fit here, since it includes the project files in here. 
+That means PRs can have non-published packages, which was a problem, since the CI had no way to retrieve it.
+
+Current goals:
+  - Adding a new package should be simple:
+    - Create directory with the package name
+    - Add PKGINFO & SRCINFO
+    - PR and wait for CI to give you the green
+    - Merge. CI should take of publishing.
+  - Any runs on master on CI should check if the packages are up-to-date with AUR
+
 ## Playbook
 
 ### Adding / Updating a package
