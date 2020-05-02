@@ -23,7 +23,7 @@ pushlatestcheck: &pushlatestcheck
     if [ "${CIRCLE_BRANCH}" = "master" ]
     then
       git clone "https://aur.archlinux.org/${CIRCLE_JOB}.git" "${CIRCLE_JOB}_2"
-      diff -r "${CIRCLE_JOB}" "${CIRCLE_JOB}_2"
+      diff -r --exclude=.git "${CIRCLE_JOB}" "${CIRCLE_JOB}_2"
     fi
 
 pkgbuildtest: &pkgbuildtest
