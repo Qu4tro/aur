@@ -167,10 +167,6 @@ jobs:
 workflows:
   version: 2
   commit:
-    filters:
-      branches:
-        ignore:
-          - bookmarks
     <<: *joblist
   weekly:
     triggers:
