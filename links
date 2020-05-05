@@ -1,4 +1,15 @@
-https://cringedcoder.github.io/posts/pushing-subtree-to-master.html
-https://medium.com/@porteneuve/mastering-git-subtrees-943d29a798ec
+https://manpages.debian.org/testing/git-man/git-subtree.1.en.html
+https://github.com/git/git/blob/master/contrib/subtree/git-subtree.txt
+https://github.com/git/git/blob/master/contrib/subtree/git-subtree.sh
+
 https://www.atlassian.com/git/tutorials/git-subtree
+
+https://medium.com/@porteneuve/mastering-git-subtrees-943d29a798ec
+
+https://www.subtreesplit.com/
+
+https://cringedcoder.github.io/posts/pushing-subtree-to-master.html
 https://blog.summitto.com/posts/submodules_subtree_subtrac/
+
+https://stackoverflow.com/questions/10081681/git-subtree-push-changes-back-to-subtree-project
+https://stackoverflow.com/questions/35564600/how-to-push-a-subtree-to-heroku-using-a-non-master-branch
