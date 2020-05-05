@@ -1,6 +1,6 @@
 # Arch Linux AUR PKGBUILDs
 
-[![CircleCI](https://circleci.com/gh/Qu4tro/aur.svg?style=svg)](https://circleci.com/gh/qu4tro/aur)
+[![CircleCI](https://circleci.com/gh/Qu4tro/aur.svg?style=svg)](https://circleci.com/gh/Qu4tro/aur)
 
 This repo holds the PKGBUILD files from https://aur.archlinux.org/packages/?K=quatro&SeB=m
 
