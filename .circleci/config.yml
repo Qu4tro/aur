@@ -1,0 +1,184 @@
+# Common sections
+defaults: &defaults
+  working_directory: ~/aur
+  docker:
+    - image: imrehg/archlinux-makepkg
+
+updatepackage: &updatepackage
+  name: Update packages
+  command: sudo pacman -Syu --noconfirm
+
+pulllatestcheck: &pulllatestcheck
+  name: Check if there are no AUR updates that are missing from this repo
+  command: |
+    if [ "${CIRCLE_BRANCH}" = "master" ]
+    then
+      git subtree pull --prefix="${CIRCLE_JOB}" "https://aur.archlinux.org/${CIRCLE_JOB}.git" master --squash
+      git subtree pull --prefix="${CIRCLE_JOB}" "https://aur.archlinux.org/${CIRCLE_JOB}.git" master --squash 2>&1 | grep "Subtree is already at commit"
+    fi
+
+pushlatestcheck: &pushlatestcheck
+  name: Check if there are updates in this repository that are missing from AUR
+  command: |
+    if [ "${CIRCLE_BRANCH}" = "master" ]
+    then
+      git clone "https://aur.archlinux.org/${CIRCLE_JOB}.git" "${CIRCLE_JOB}_2"
+      diff -r --exclude=.git "${CIRCLE_JOB}" "${CIRCLE_JOB}_2"
+    fi
+
+pkgbuildtest: &pkgbuildtest
+  name: Testing PKGBUILD
+  command: |
+    cd ~/aur/${CIRCLE_JOB}
+    namcap PKGBUILD && [[ ! "$(namcap PKGBUILD)" ]]
+
+srcinfotest: &srcinfotest
+  name: Check if srcinfo was correctly generated
+  command: |
+    cd ~/aur/${CIRCLE_JOB}
+    makepkg --printsrcinfo > .SRCINFO2
+    diff .SRCINFO .SRCINFO2
+
+buildtest: &buildtest
+  name: Building package
+  command: |
+    cd ~/aur/${CIRCLE_JOB}
+    makepkg -sci --noconfirm
+
+joblist: &joblist
+  jobs:
+    - tuql
+    - laby-git
+    - pass-file-git
+    - pass-type-git
+    - nato-spell-git
+    - pass-spell-git:
+        requires:
+          - nato-spell-git
+
+# Main
+version: 2
+jobs:
+  tuql:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *updatepackage
+      - checkout
+      - run:
+          <<: *pulllatestcheck
+      - run:
+          <<: *pushlatestcheck
+      - run:
+          <<: *pkgbuildtest
+      - run:
+          <<: *srcinfotest
+      - run:
+          <<: *buildtest
+  laby-git:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *updatepackage
+      - checkout
+      - run:
+          <<: *pulllatestcheck
+      - run:
+          <<: *pushlatestcheck
+      - run:
+          <<: *pkgbuildtest
+      - run:
+          <<: *srcinfotest
+      - run:
+          <<: *buildtest
+  pass-file-git:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *updatepackage
+      - checkout
+      - run:
+          <<: *pulllatestcheck
+      - run:
+          <<: *pushlatestcheck
+      - run:
+          <<: *pkgbuildtest
+      - run:
+          <<: *srcinfotest
+      - run:
+          <<: *buildtest
+  pass-type-git:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *updatepackage
+      - checkout
+      - run:
+          <<: *pulllatestcheck
+      - run:
+          <<: *pushlatestcheck
+      - run:
+          <<: *pkgbuildtest
+      - run:
+          <<: *srcinfotest
+      - run:
+          <<: *buildtest
+  nato-spell-git:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *updatepackage
+      - checkout
+      - run:
+          <<: *pulllatestcheck
+      - run:
+          <<: *pushlatestcheck
+      - run:
+          <<: *pkgbuildtest
+      - run:
+          <<: *srcinfotest
+      - run:
+          <<: *buildtest
+      - persist_to_workspace:
+          root: nato-spell-git
+          paths: nato-spell-git-*.pkg.tar.xz
+  pass-spell-git:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *updatepackage
+      - checkout
+      - run:
+          <<: *pulllatestcheck
+      - run:
+          <<: *pushlatestcheck
+      - run:
+          <<: *pkgbuildtest
+      - run:
+          <<: *srcinfotest
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Installing nato-spell
+          command: sudo pacman -U --noconfirm /tmp/workspace/nato-spell-git*.pkg.*
+      - run:
+          <<: *buildtest
+
+workflows:
+  version: 2
+  commit:
+    filters:
+      branches:
+        ignore:
+          - bookmarks
+    <<: *joblist
+  weekly:
+    triggers:
+      - schedule:
+          # “At 06:00 on Saturday.”
+          cron: "0 6 * * 6"
+          filters:
+            branches:
+              only:
+                - master
+    <<: *joblist
