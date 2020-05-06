@@ -1,8 +1,12 @@
 #!/bin/sh
 
 subtrees(){
-  git log | grep git-subtree-dir | tr -d ' ' | cut -d ":" -f2 | sort | uniq | xargs -I {} bash -c 'if [ -d $(git rev-parse --show-toplevel)/{} ] ; then echo {}; fi'
+  git log | grep git-subtree-dir | tr -d ' ' | cut -d ":" -f2 | sort | uniq | xargs -I {} bash -c "if [ -d $(git rev-parse --show-toplevel)/{} ] ; then echo {}; fi"
 }
 
-subtrees | xargs -L1 -I% git subtree push --prefix=% ssh+git://aur@aur.archlinux.org/%.git master
-subtrees | xargs -L1 -I% git subtree pull --prefix=% https://aur@aur.archlinux.org/%.git master --squash
+sync(){
+  git subtree push --prefix="$1" "ssh+git://aur@aur.archlinux.org/$1.git" master
+  git subtree pull --prefix="$1" "https://aur@aur.archlinux.org/$1.git" master --squash
+}
+
+subtrees | while read -r subtree ; do sync "$subtree" ; done
