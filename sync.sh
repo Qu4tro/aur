@@ -11,16 +11,20 @@ Usage:
 Available subtrees:
 $(subtrees | sed 's/^/  /' )
 EOF
-
-
 }
 
 subtrees(){
-  git log | grep git-subtree-dir | tr -d ' ' | cut -d ":" -f2 | sort | uniq | xargs -I {} bash -c "if [ -d $(git rev-parse --show-toplevel)/{} ] ; then echo {}; fi"
+  git log \
+    | grep git-subtree-dir \
+    | tr -d ' ' \
+    | cut -d ":" -f2 \
+    | sort \
+    | uniq \
+    | xargs -I {} bash -c "if [ -d $(git rev-parse --show-toplevel)/{} ] ; then echo {}; fi"
 }
 
 sync(){
-  echo "sync $1" && exit 1
+  [ -z "$1" ] && exit 1
   # The code for the push below could usually be replaced with
   #   git subtree push --prefix="$1" "ssh+git://aur@aur.archlinux.org/$1.git" master
   # but we want to push from a different branch to master
@@ -34,13 +38,16 @@ sync(){
   git subtree pull --prefix="$1" "${remote}" master --squash
 }
 
-if [ -z "$1" ]; then
-  usage
-elif [ "$1" = "all" ]; then
-  echo "sync all" && exit 1
-  subtrees | while read -r subtree ; do sync "${subtree}" ; done
-elif [[ "$(subtrees)" =~ $1 ]]; then
-  sync "$1"
-else
-  usage
-fi
+main(){
+  if [ -z "$1" ]; then
+    usage
+  elif [ "$1" = "all" ]; then
+    subtrees | while read -r subtree ; do sync "${subtree}" ; done
+  elif [[ "$(subtrees)" =~ $1 ]]; then
+    sync "$1"
+  else
+    usage
+  fi
+}
+
+main "$@"
