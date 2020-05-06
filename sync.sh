@@ -4,7 +4,7 @@ usage(){
   cat << EOF
 Usage: 
   ./sync.sh all             - Synchronizes all subtrees
-  ./sync.sh <package-name>  - Synchronizes a single subtree
+  ./sync.sh <subtree>       - Synchronizes a single subtree
   ./sync.sh                 - This screen
   ./sync.sh <anything-else> - This screen
 
