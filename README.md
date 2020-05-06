@@ -21,8 +21,8 @@ I'm not sure if there's a way around this.
 - [1] Create a branch.
 - [2] Update the PKGBUILD and .SRCINFO of the package. Commit changes.
 - [3] Push and create a new pull request.
-- [4] If CI gives you the okay, merge into master.
-- [5] Run `./sync-all.sh` and push the new commits.
+- [4] If CI gives you the okay, run `./sync.sh <package>`. This will push all the package commits into AUR.
+- [5] Push the new subtree commits, wait for CI and merge into master.
 
 ### Adding a package (TODO)
 
