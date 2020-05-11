@@ -42,12 +42,12 @@ sync(){
 
 new(){
   [ -z "$1" ] && return 1
-  remote="ssh+git://aur@aur.archlinux.org/$1.git"
+  # remote="ssh+git://aur@aur.archlinux.org/$1.git"
 
-  git remote add "$1" "$remote"
+  # git remote add "$1" "$remote"
   current_branch="$(git symbolic-ref --short -q HEAD)"
   split_commit="$(git subtree split --prefix="$1" "${current_branch}")"
-  git push "$remote" "$(git_current_branch):master"
+  # git push "$remote" "$(git_current_branch):master"
 }
 
 main(){
