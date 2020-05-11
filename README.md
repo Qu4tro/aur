@@ -26,9 +26,9 @@ FYI, the playbook below is still a work in progress, so don't trust it.
 - Create a branch.
 - Run `git subtree add --prefix <pkgname> ssh+git://aur@aur.archlinux.org/<pkgname>.git master`. 
 - Push and create a new pull request. Resolve any issue the CI raises.
-- If you do any additional commits, you have to run `git subtree split --prefix <pkgname> --rejoin`¹ .
+- If you do any additional commits, you have to run `git subtree split --prefix <pkgname> --rejoin`¹.
 - Push the new subtree commits, wait for CI and merge into master.
-- (Hopefully temporary) Push into AUR locally
+- (Hopefully temporary) Push into AUR locally².
 
 ### Updating a package that already exists here
 
@@ -37,16 +37,16 @@ FYI, the playbook below is still a work in progress, so don't trust it.
 - Push and create a new pull request. Resolve any issue the CI raises.
 - Run `git subtree split --prefix <pkgname> --rejoin`. 
 - Push the new subtree commits, wait for CI and merge into master.
-- (Hopefully temporary) Push into AUR locally
+- (Hopefully temporary) Push into AUR locally.
 
 ### Creating a package from scratch
 
 - Create a branch.
-- Create a directory with the same name as the pkgname. Add the ``PKGBUILD``² and `.SRCINFO` of the package and commit the changes.
+- Create a directory with the same name as the pkgname. Add the ``PKGBUILD``³ and `.SRCINFO` of the package and commit the changes.
 - Push and create a new pull request. Resolve any issue the CI raises.
 - Run `git subtree split --prefix <pkgname> --rejoin`.
 - Push the new subtree commits, wait for CI and merge into master.
-- (Hopefully temporary) Push into AUR locally
+- (Hopefully temporary) Push into AUR locally.
 
 ### Updating a package with changes in AUR
 
@@ -58,8 +58,12 @@ This is useful when someone edits a AUR package without editing this repository.
 - If you do any additional commits, you have to run `git subtree split --prefix <pkgname> --rejoin`.
 - Push the new subtree commits, wait for CI and merge into master.
 
-¹ This commits in our subtree and updates our branch to the new subtree HEAD.
-² You can use `curl https://git.archlinux.org/pacman.git/plain/proto/PKGBUILD.proto > PKGBUILD` as a starting point.
+#### Notes
+¹ This creates a commit for the subtree HEAD. It also updates ours to reflect the new commit.
+
+² Run `git subtree push --prefix="$1" "ssh+git://aur@aur.archlinux.org/$1.git" master` while on the master branch.
+
+³ You can use `curl https://git.archlinux.org/pacman.git/plain/proto/PKGBUILD.proto > PKGBUILD` as a starting point.
 
 
 ## Credits
