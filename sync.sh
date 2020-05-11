@@ -32,11 +32,12 @@ sync(){
   # but we want to push from a different branch to master
   # in lieu, of what the above does: master to master.
   remote="ssh+git://aur@aur.archlinux.org/$1.git"
-  current_branch="$(git symbolic-ref --short -q HEAD)"
-  split_commit="$(git subtree split --prefix="$1" "${current_branch}")"
-  git push "${remote}" "${split_commit}:master" --force
+  # current_branch="$(git symbolic-ref --short -q HEAD)"
+  # split_commit="$(git subtree split --prefix="$1" "${current_branch}")"
+  # git push "${remote}" "${split_commit}:master" --force
 
 
+  git subtree push --prefix="$1" "${remote}" master
   git subtree pull --prefix="$1" "${remote}" master --squash
 }
 

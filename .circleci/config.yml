@@ -19,8 +19,11 @@ aur_setup: &aur_setup
 
     git clone https://aur.archlinux.org/aurutils.git /home/builder/aurutils
     cd /home/builder/aurutils
-    gpg --keyserver hkps://hkps.pool.sks-keyservers.net \
-        --recv-keys DBE7D3DD8C81D58D0A13D0E76BC26A17B9B7018A
+
+    gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "DBE7D3DD8C81D58D0A13D0E76BC26A17B9B7018A" || \
+    gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net   --recv-keys "DBE7D3DD8C81D58D0A13D0E76BC26A17B9B7018A" || \
+    gpg --batch --keyserver hkp://ha.pool.sks-keyservers.net     --recv-keys "DBE7D3DD8C81D58D0A13D0E76BC26A17B9B7018A"
+
     makepkg --syncdeps --install --noconfirm
 
     sudo pacman -S moreutils --noconfirm

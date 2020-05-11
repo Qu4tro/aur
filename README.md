@@ -48,7 +48,7 @@ FYI, the playbook below is still a work in progress, so don't trust it.
 - Push the new subtree commits, wait for CI and merge into master.
 - (Hopefully temporary) Push into AUR locally.
 
-### Updating a package with changes in AUR
+### Updating a package with changes from AUR
 
 This is useful when someone edits a AUR package without editing this repository.
 
