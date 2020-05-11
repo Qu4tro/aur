@@ -24,9 +24,11 @@ subtrees(){
 }
 
 sync(){
-  [ -z "$1" ] && exit 1
-  # The code for the push below could usually be replaced with
-  #   git subtree push --prefix="$1" "ssh+git://aur@aur.archlinux.org/$1.git" master
+  [ -z "$1" ] && return 1
+
+  # The code for the push below could usually be replaced with:
+  #     git subtree push --prefix="$1"
+  #       "ssh+git://aur@aur.archlinux.org/$1.git" master
   # but we want to push from a different branch to master
   # in lieu, of what the above does: master to master.
   remote="ssh+git://aur@aur.archlinux.org/$1.git"
@@ -36,6 +38,16 @@ sync(){
 
 
   git subtree pull --prefix="$1" "${remote}" master --squash
+}
+
+new(){
+  [ -z "$1" ] && return 1
+  # remote="ssh+git://aur@aur.archlinux.org/$1.git"
+
+  # git remote add "$1" "$remote"
+  current_branch="$(git symbolic-ref --short -q HEAD)"
+  split_commit="$(git subtree split --prefix="$1" "${current_branch}")"
+  # git push "$remote" "$(git_current_branch):master"
 }
 
 main(){

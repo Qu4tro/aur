@@ -4,11 +4,32 @@ defaults: &defaults
   docker:
     - image: imrehg/archlinux-makepkg
 
-updatepackage: &updatepackage
+aur_setup: &aur_setup
+  name: Setup aurutils
+  command: |
+    cat << EOF | sudo tee --append /etc/pacman.conf
+    [custom]
+    SigLevel = Optional TrustAll
+    Server = file:///home/builder/aur-remote
+    EOF
+
+    sudo install -d /home/builder/aur-remote -o builder
+    repo-add /home/builder/aur-remote/custom.db.tar
+    sudo pacman -Syu --noconfirm
+
+    git clone https://aur.archlinux.org/aurutils.git /home/builder/aurutils
+    cd /home/builder/aurutils
+    gpg --keyserver hkps://hkps.pool.sks-keyservers.net \
+        --recv-keys DBE7D3DD8C81D58D0A13D0E76BC26A17B9B7018A
+    makepkg --syncdeps --install --noconfirm
+
+    sudo pacman -S moreutils --noconfirm
+
+packages_update: &packages_update
   name: Update packages
   command: sudo pacman -Syu --noconfirm
 
-pulllatestcheck: &pulllatestcheck
+pull_latest_check: &pull_latest_check
   name: Check if there are no AUR updates that are missing from this repo
   command: |
     if [ "${CIRCLE_BRANCH}" = "master" ]
@@ -17,7 +38,7 @@ pulllatestcheck: &pulllatestcheck
       git subtree pull --prefix="${CIRCLE_JOB}" "https://aur.archlinux.org/${CIRCLE_JOB}.git" master --squash 2>&1 | grep "Subtree is already at commit"
     fi
 
-pushlatestcheck: &pushlatestcheck
+push_latest_check: &push_latest_check
   name: Check if there are updates in this repository that are missing from AUR
   command: |
     if [ "${CIRCLE_BRANCH}" = "master" ]
@@ -26,20 +47,38 @@ pushlatestcheck: &pushlatestcheck
       diff -r --exclude=.git "${CIRCLE_JOB}" "${CIRCLE_JOB}_2"
     fi
 
-pkgbuildtest: &pkgbuildtest
+namcap_check: &namcap_check
   name: Testing PKGBUILD
   command: |
     cd ~/aur/${CIRCLE_JOB}
     namcap PKGBUILD && [[ ! "$(namcap PKGBUILD)" ]]
 
-srcinfotest: &srcinfotest
+srcinfo_check: &srcinfo_check
   name: Check if srcinfo was correctly generated
   command: |
     cd ~/aur/${CIRCLE_JOB}
     makepkg --printsrcinfo > .SRCINFO2
     diff .SRCINFO .SRCINFO2
 
-buildtest: &buildtest
+aur_makedeps_sync: &aur_makedeps_sync
+  name: Sync AUR makedependencies with local pacman repository
+  command: |
+    cd ~/aur/${CIRCLE_JOB}
+    comm -12                                                               \
+        <(cat .SRCINFO | grep "makedepends = " | awk '{print $NF}' | sort) \
+        <(aur pkglist | sort)                                              \
+    | ifne xargs aur sync --noview --noconfirm
+
+aur_deps_sync: &aur_deps_sync
+  name: Sync AUR dependencies with local pacman repository
+  command: |
+    cd ~/aur/${CIRCLE_JOB}
+    comm -12                                                               \
+        <(cat .SRCINFO | grep "depends = " | awk '{print $NF}' | sort) \
+        <(aur pkglist | sort)                                              \
+    | ifne xargs aur sync --noview --noconfirm
+
+makepkg_install: &makepkg_install
   name: Building package
   command: |
     cd ~/aur/${CIRCLE_JOB}
@@ -55,6 +94,7 @@ joblist: &joblist
     - pass-spell-git:
         requires:
           - nato-spell-git
+    - git-bookmark-git
 
 # Main
 version: 2
@@ -63,82 +103,82 @@ jobs:
     <<: *defaults
     steps:
       - run:
-          <<: *updatepackage
+          <<: *packages_update
       - checkout
       - run:
-          <<: *pulllatestcheck
+          <<: *pull_latest_check
       - run:
-          <<: *pushlatestcheck
+          <<: *push_latest_check
       - run:
-          <<: *pkgbuildtest
+          <<: *namcap_check
       - run:
-          <<: *srcinfotest
+          <<: *srcinfo_check
       - run:
-          <<: *buildtest
+          <<: *makepkg_install
   laby-git:
     <<: *defaults
     steps:
       - run:
-          <<: *updatepackage
+          <<: *packages_update
       - checkout
       - run:
-          <<: *pulllatestcheck
+          <<: *pull_latest_check
       - run:
-          <<: *pushlatestcheck
+          <<: *push_latest_check
       - run:
-          <<: *pkgbuildtest
+          <<: *namcap_check
       - run:
-          <<: *srcinfotest
+          <<: *srcinfo_check
       - run:
-          <<: *buildtest
+          <<: *makepkg_install
   pass-file-git:
     <<: *defaults
     steps:
       - run:
-          <<: *updatepackage
+          <<: *packages_update
       - checkout
       - run:
-          <<: *pulllatestcheck
+          <<: *pull_latest_check
       - run:
-          <<: *pushlatestcheck
+          <<: *push_latest_check
       - run:
-          <<: *pkgbuildtest
+          <<: *namcap_check
       - run:
-          <<: *srcinfotest
+          <<: *srcinfo_check
       - run:
-          <<: *buildtest
+          <<: *makepkg_install
   pass-type-git:
     <<: *defaults
     steps:
       - run:
-          <<: *updatepackage
+          <<: *packages_update
       - checkout
       - run:
-          <<: *pulllatestcheck
+          <<: *pull_latest_check
       - run:
-          <<: *pushlatestcheck
+          <<: *push_latest_check
       - run:
-          <<: *pkgbuildtest
+          <<: *namcap_check
       - run:
-          <<: *srcinfotest
+          <<: *srcinfo_check
       - run:
-          <<: *buildtest
+          <<: *makepkg_install
   nato-spell-git:
     <<: *defaults
     steps:
       - run:
-          <<: *updatepackage
+          <<: *packages_update
       - checkout
       - run:
-          <<: *pulllatestcheck
+          <<: *pull_latest_check
       - run:
-          <<: *pushlatestcheck
+          <<: *push_latest_check
       - run:
-          <<: *pkgbuildtest
+          <<: *namcap_check
       - run:
-          <<: *srcinfotest
+          <<: *srcinfo_check
       - run:
-          <<: *buildtest
+          <<: *makepkg_install
       - persist_to_workspace:
           root: nato-spell-git
           paths: nato-spell-git-*.pkg.tar.xz
@@ -146,23 +186,46 @@ jobs:
     <<: *defaults
     steps:
       - run:
-          <<: *updatepackage
+          <<: *packages_update
       - checkout
       - run:
-          <<: *pulllatestcheck
+          <<: *pull_latest_check
       - run:
-          <<: *pushlatestcheck
+          <<: *push_latest_check
       - run:
-          <<: *pkgbuildtest
+          <<: *namcap_check
       - run:
-          <<: *srcinfotest
+          <<: *srcinfo_check
       - attach_workspace:
           at: /tmp/workspace
       - run:
           name: Installing nato-spell
           command: sudo pacman -U --noconfirm /tmp/workspace/nato-spell-git*.pkg.*
       - run:
-          <<: *buildtest
+          <<: *makepkg_install
+  git-bookmark-git:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *packages_update
+      - run:
+          <<: *aur_setup
+      - checkout
+      - run:
+          <<: *pull_latest_check
+      - run:
+          <<: *push_latest_check
+      # namcap is wrong
+      # - run:
+      #     <<: *namcap_check
+      - run:
+          <<: *srcinfo_check
+      - run:
+          <<: *aur_makedeps_sync
+      - run:
+          <<: *aur_deps_sync
+      - run:
+          <<: *makepkg_install
 
 workflows:
   version: 2
