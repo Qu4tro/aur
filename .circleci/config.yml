@@ -98,6 +98,7 @@ joblist: &joblist
         requires:
           - nato-spell-git
     - git-bookmark-git
+    - git-bookmark
 
 # Main
 version: 2
@@ -207,6 +208,29 @@ jobs:
       - run:
           <<: *makepkg_install
   git-bookmark-git:
+    <<: *defaults
+    steps:
+      - run:
+          <<: *packages_update
+      - run:
+          <<: *aur_setup
+      - checkout
+      - run:
+          <<: *pull_latest_check
+      - run:
+          <<: *push_latest_check
+      # namcap is wrong
+      # - run:
+      #     <<: *namcap_check
+      - run:
+          <<: *srcinfo_check
+      - run:
+          <<: *aur_makedeps_sync
+      - run:
+          <<: *aur_deps_sync
+      - run:
+          <<: *makepkg_install
+  git-bookmark:
     <<: *defaults
     steps:
       - run:
