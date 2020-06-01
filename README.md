@@ -39,7 +39,7 @@ FYI, the playbook below is still a work in progress, so don't trust it.
 - Push the new subtree commits, wait for CI and merge into master.
 - (Hopefully temporary) Push into AUR locally.
 
-### Creating a package from scratch (TODO)
+### Creating a package from scratch
 
 - Create a branch.
 - Create a directory with the same name as the pkgname. Add the ``PKGBUILD``³ and `.SRCINFO` of the package and commit the changes.
