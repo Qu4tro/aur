@@ -19,9 +19,9 @@ Maaaybe there's a way around this. After a subtree split, the commit does exist 
 
 FYI, the playbook below is still a work in progress, so don't trust it.
 
-## Playbook (TODO)
+## Playbook
 
-### Importing a package that already exists in AUR
+### Importing a package that already exists in AUR (TODO)
 
 - Create a branch.
 - Run `git subtree add --prefix <pkgname> ssh+git://aur@aur.archlinux.org/<pkgname>.git master`. 
@@ -39,7 +39,7 @@ FYI, the playbook below is still a work in progress, so don't trust it.
 - Push the new subtree commits, wait for CI and merge into master.
 - (Hopefully temporary) Push into AUR locally.
 
-### Creating a package from scratch
+### Creating a package from scratch (TODO)
 
 - Create a branch.
 - Create a directory with the same name as the pkgname. Add the ``PKGBUILD``³ and `.SRCINFO` of the package and commit the changes.
@@ -48,7 +48,7 @@ FYI, the playbook below is still a work in progress, so don't trust it.
 - Push the new subtree commits, wait for CI and merge into master.
 - (Hopefully temporary) Push into AUR locally.
 
-### Updating a package with changes from AUR
+### Updating a package with changes from AUR (TODO)
 
 This is useful when someone edits a AUR package without editing this repository.
 
