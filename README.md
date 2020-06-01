@@ -6,18 +6,16 @@ This repo holds the PKGBUILD files from https://aur.archlinux.org/packages/?K=qu
 
 ## Captain log
 
-I've just migrated this repo from submodules to subtrees. I think subtrees are a better fit here, since it includes the project files in here. 
-That means PRs can have non-published packages, which was a problem, since the CI had no way to retrieve it from the submodule remote (since it didn't exist).
+  - Uses subtrees to keep track of the remote AUR repositories.
+      - That means PRs can have non-published packages, which was a problem with submodules, since the CI had no way to retrieve it from the submodule remote (since it didn't exist).
+      - That also means, this repository history gets cluttered really fast.
 
-It would be great for the CI to take care of the publishing whenever a commit was made into master. The main barrier is the SSH key. The public key need to be added to AUR and Github. The private key needs to be in CircleCI. This accomplishes two goals:
-  - CircleCI can push into AUR to publish new packages.
-  - CircleCI can push into Github to update master with newly created commits in the step above.
-I'm not sure if there's a way around this.
+  - It should be possible for the CI to handle publishing on it's own [TODO]
+      - In theory, whenever master has a new commit, the CI just needs to run `git subtree push` on all packages.
+      - The CI would also need an SSH key that is connected to a AUR account (AUR allows multiple ssh keys, by separating each with a newline).
+  - The parts of the playbook marked with TODO are a WIP. Don't trust them too much, although it _should_ be fine.
+  - `sync.sh` is my WIP script to handle this workflow. It's not ready for any use.
 
-Maaaybe there's a way around this. After a subtree split, the commit does exist locally, no remote involved. That's the same commit, that will end up on AUR.
-
-
-FYI, the playbook below is still a work in progress, so don't trust it.
 
 ## Playbook
 
