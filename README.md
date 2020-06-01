@@ -25,6 +25,7 @@ FYI, the playbook below is still a work in progress, so don't trust it.
 
 - Create a branch.
 - Run `git subtree add --prefix <pkgname> ssh+git://aur@aur.archlinux.org/<pkgname>.git master`. 
+- Add package entry to CircleCI
 - Push and create a new pull request. Resolve any issue the CI raises.
 - If you do any additional commits, you have to run `git subtree split --prefix <pkgname> --rejoin`¹.
 - Push the new subtree commits, wait for CI and merge into master.
@@ -43,6 +44,7 @@ FYI, the playbook below is still a work in progress, so don't trust it.
 
 - Create a branch.
 - Create a directory with the same name as the pkgname. Add the ``PKGBUILD``³ and `.SRCINFO` of the package and commit the changes.
+- Add package entry to CircleCI
 - Push and create a new pull request. Resolve any issue the CI raises.
 - Run `git subtree split --prefix <pkgname> --rejoin`.
 - Push the new subtree commits, wait for CI and merge into master.
